@@ -16,7 +16,7 @@
     "mozilla",
     "cli"
   ],
-  "version": "0.0.1",
+  "version": "0.1",
   "author": {
     "name": "Alessio Ricco",
     "email": "alessio.ricco+ffos@gmail.com"
@@ -29,18 +29,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/alessioricco/firefoxos"
+    "url": "git://github.com/alessioricco/cli-firefoxos"
   },
   "preferGlobal": true,
   "dependencies": {
-    "pkginfo": ">=0.2.2",
-    "underscore": ">=1.5.2",
-    "uglify-js": "~2.4.0",
-    "fs-extended": "~0.2.0"
+    "underscore": ">=1.5.2"
   },
-  "license": "Apache Public License v2",
-  "bin": "./bin.js",
-  "main": "./main.js",
+  "license": "The MIT License (MIT)",
   "directories": {
     "lib": "./lib"
   },
@@ -51,6 +46,6 @@
   "readme": "",
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "https://github.com/alessioricco/firefoxos/issues"
+    "url": "https://github.com/alessioricco/cli-firefoxos/issues"
   }
 }
