@@ -1,0 +1,56 @@
+{
+  "about": {
+    "name": "Titanium FirefoxOS CLI",
+    "author": "Alessio Ricco",
+    "copyright": "Copyright (c) 2014, Alessio Ricco.  All Rights Reserved.",
+    "id": "com.alessioricco.firefoxos"
+  },
+  "name": "ti-firefoxos",
+  "description": "CLI to adapt a Titanium MobileWeb app to FirefoxOS",
+  "keywords": [
+    "appcelerator",
+    "titanium",
+    "mobile",
+    "mobileweb",
+    "firefoxos",
+    "mozilla",
+    "cli"
+  ],
+  "version": "0.0.1",
+  "author": {
+    "name": "Alessio Ricco",
+    "email": "alessio.ricco+ffos@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "Alessio Ricco",
+      "email": "alessio.ricco+ffos@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alessioricco/firefoxos"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "pkginfo": ">=0.2.2",
+    "underscore": ">=1.5.2",
+    "uglify-js": "~2.4.0",
+    "fs-extended": "~0.2.0"
+  },
+  "license": "Apache Public License v2",
+  "bin": "./bin.js",
+  "main": "./main.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "homepage": "http://alessioricco.com",
+  "readme": "",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/alessioricco/firefoxos/issues"
+  }
+}
