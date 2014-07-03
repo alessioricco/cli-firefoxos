@@ -8,18 +8,26 @@ exports.cliVersion = '>=3.2';
  
 var logger, form, platform, config;
 
+/******************************************
+ * 
+ *****************************************/
 var mobileweb = function(data, callback) {
-
 	logger.info("*************************** mobileweb");
 	//logger.info(JSON.stringify(data));
 	callback && callback();
-
 }
-var postexecute = function(data, callback) {
 
+/******************************************
+ * 
+ *****************************************/
+var postexecute = function(data, callback) {
 	logger.info("*************************** postexecute");
 	callback && callback();
 }
+
+/******************************************
+ * 
+ *****************************************/
 var preexecute = function(data, callback) {
 
 	logger.info("*************************** preexecute");
@@ -47,6 +55,7 @@ var preexecute = function(data, callback) {
 	// get the manifest
 	var manifest = tiapp.getFirefoxManifest();
 	if (!manifest) {
+		//todo: building a manifest from tiapp.xml
 		return;
 	}
 
@@ -65,6 +74,9 @@ var preexecute = function(data, callback) {
 
 };
 
+/******************************************
+ * 
+ *****************************************/
 var precompile = function(data, callback) {
 
 	logger.info("*************************** precompile");
@@ -76,28 +88,39 @@ var precompile = function(data, callback) {
 
 	callback && callback();
 }
+
 /*
  after the compilation i could modifiy the index.html file on destination and make it
  firefoxos compliant
  */
+
+/******************************************
+ * 
+ *****************************************/
 var postcompile = function(data, callback) {
 	logger.info("*************************** postcompile");
-
-	//var cli = data.cli;
-
 	callback && callback();
 }
-var commandloaded = function(data, callback) {
 
+/******************************************
+ * 
+ *****************************************/
+var commandloaded = function(data, callback) {
 	logger.info("*************************** commandloaded");
 	callback && callback();
 }
 
+/******************************************
+ * 
+ *****************************************/
 String.prototype.replaceAll = function (find, replace) {
     var str = this;
     return str.replace(new RegExp(find, 'g'), replace);
 };
 
+/******************************************
+ * 
+ *****************************************/
 var finalize = function(data, callback) {
 
 	logger.info("*************************** finalize ");
@@ -115,8 +138,9 @@ var finalize = function(data, callback) {
 		callback && callback();
 	}
 
+	// change the index.html file
 	function modify(data, cb) {
-		// change the index.html file
+		
 		var err = false;
 		var newdata = data;
 
@@ -135,14 +159,13 @@ var finalize = function(data, callback) {
 			
 		}
 
-
 		if (!err) {
 			cb && cb(newdata);
 		}
 	}
 
 	function read(cb) {
-		var input = fs.readFile(buildDir + "/index.html", "utf8", function(err, data) {
+		var input = fs.readFile(path, "utf8", function(err, data) {
 
 			if (err) {
 				logger.error("unable to read index.html");
@@ -158,6 +181,10 @@ var finalize = function(data, callback) {
 	read(modify);
 
 }
+
+/******************************************
+ * 
+ *****************************************/
 var go = {
 	pre : function(data, callback) {
 
@@ -173,11 +200,13 @@ var go = {
 	priority : 1000
 }
 
+/******************************************
+ * 
+ *****************************************/
 exports.init = function(_logger, config, cli, appc) {
 
 	logger = _logger;
 	logger.info("*************************** init");
-
 	//logger.info(JSON.stringify(config));
 
 	if (process.argv.indexOf('--ffos') !== -1 || process.argv.indexOf('--firefoxos') !== -1) {
