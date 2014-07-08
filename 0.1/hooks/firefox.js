@@ -5,28 +5,26 @@ var fs = require("fs");
 var xml = require("../lib/xml");
 
 exports.cliVersion = '>=3.2';
- 
+
 var logger, form, platform, config;
 
 /******************************************
- * 
+ *
  *****************************************/
 var mobileweb = function(data, callback) {
 	logger.info("*************************** mobileweb");
 	//logger.info(JSON.stringify(data));
 	callback && callback();
 }
-
 /******************************************
- * 
+ *
  *****************************************/
 var postexecute = function(data, callback) {
 	logger.info("*************************** postexecute");
 	callback && callback();
 }
-
 /******************************************
- * 
+ *
  *****************************************/
 var preexecute = function(data, callback) {
 
@@ -35,6 +33,9 @@ var preexecute = function(data, callback) {
 	// read the manifest from tiapp.xml
 	var tiapp = tiappxml.load('./tiapp.xml');
 	if (!tiapp) {
+
+		logger.info("tiapp is null");
+
 		return;
 	}
 	tiapp.getFirefoxManifest = function getFirefoxManifest() {
@@ -54,28 +55,44 @@ var preexecute = function(data, callback) {
 
 	// get the manifest
 	var manifest = tiapp.getFirefoxManifest();
-	if (!manifest) {
+	logger.info("manifest:\n" + manifest);
+	if (!manifest || manifest.length == 0) {
+
+		logger.info("manifest is null");
+
 		//todo: building a manifest from tiapp.xml
 		return;
 	}
 
 	// write the manifest
-	var output = fs.createWriteStream("./Resources/manifest.webapp");
-	output.on('close', function() {
-		logger.info("manifest,webapp wrote");
-	});
-	output.write(manifest, "utf8", function() {
-		output.close();
-	});
+	/*
+	 var output = fs.createWriteStream("./Resources/manifest.webapp");
+	 output.on('close', function() {
+	 logger.info("manifest,webapp wrote");
+	 });
+	 output.write(manifest, "utf8", function() {
+	 output.close();
+	 });
+	 */
+	fs.writeFile("./Resources/manifest.webapp", manifest, function(err) {
+		if (err)
+		
+			{
+				logger.info(err);
+				return console.log(err);
+				
+				}
+		//console.log('Hello World > helloworld.txt');
+		logger.info("manifest wrote");
 
-	data.cli.addHook('cli:post-execute', postexecute);
-
-	callback && callback();
+		data.cli.addHook('cli:post-execute', postexecute);
+		callback && callback();
+	});
 
 };
 
 /******************************************
- * 
+ *
  *****************************************/
 var precompile = function(data, callback) {
 
@@ -88,38 +105,35 @@ var precompile = function(data, callback) {
 
 	callback && callback();
 }
-
 /*
- after the compilation i could modifiy the index.html file on destination and make it
- firefoxos compliant
- */
+after the compilation i could modifiy the index.html file on destination and make it
+firefoxos compliant
+*/
 
 /******************************************
- * 
+ *
  *****************************************/
 var postcompile = function(data, callback) {
 	logger.info("*************************** postcompile");
 	callback && callback();
 }
-
 /******************************************
- * 
+ *
  *****************************************/
 var commandloaded = function(data, callback) {
 	logger.info("*************************** commandloaded");
 	callback && callback();
 }
-
 /******************************************
- * 
+ *
  *****************************************/
-String.prototype.replaceAll = function (find, replace) {
-    var str = this;
-    return str.replace(new RegExp(find, 'g'), replace);
+String.prototype.replaceAll = function(find, replace) {
+	var str = this;
+	return str.replace(new RegExp(find, 'g'), replace);
 };
 
 /******************************************
- * 
+ *
  *****************************************/
 var finalize = function(data, callback) {
 
@@ -140,23 +154,21 @@ var finalize = function(data, callback) {
 
 	// change the index.html file
 	function modify(data, cb) {
-		
+
 		var err = false;
 		var newdata = data;
 
-		try{
-			
-			newdata = newdata.replaceAll("'click'","'touchend'");
-			newdata = newdata.replaceAll("'singletap'","'touchend'");
-			newdata = newdata.replaceAll('"click"','"touchend"');
-			newdata = newdata.replaceAll('"singletap"','"touchend"');	
-					
-		} catch(e)
-		{
+		try {
+
+			newdata = newdata.replaceAll("'click'", "'touchend'");
+			newdata = newdata.replaceAll("'singletap'", "'touchend'");
+			newdata = newdata.replaceAll('"click"', '"touchend"');
+			newdata = newdata.replaceAll('"singletap"', '"touchend"');
+
+		} catch(e) {
 			logger.error("unable to modify index.html");
-		}
-		finally{
-			
+		} finally {
+
 		}
 
 		if (!err) {
@@ -181,9 +193,8 @@ var finalize = function(data, callback) {
 	read(modify);
 
 }
-
 /******************************************
- * 
+ *
  *****************************************/
 var go = {
 	pre : function(data, callback) {
@@ -201,7 +212,7 @@ var go = {
 }
 
 /******************************************
- * 
+ *
  *****************************************/
 exports.init = function(_logger, config, cli, appc) {
 
