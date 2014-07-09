@@ -148,8 +148,10 @@ var finalize = function(data, callback) {
 				return;
 			}
 
+callback && callback();
+
 		});
-		callback && callback();
+		
 	}
 
 	// change the index.html file
