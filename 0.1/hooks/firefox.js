@@ -6,7 +6,7 @@ var xml = require("../lib/xml");
 
 exports.cliVersion = '>=3.2';
 
-var logger, form, platform, config;
+var logger, form, platform, config, manifestsrc;
 
 /******************************************
  *
@@ -41,6 +41,7 @@ var preexecute = function(data, callback) {
 	tiapp.getFirefoxManifest = function getFirefoxManifest() {
 		var mobilewebContainer = xml.getLastElement(this.doc.documentElement, 'mobileweb');
 		if (!mobilewebContainer) {
+			logger.info("mobilewebContainer: not found");
 			return null;
 		}
 		// create results object from <target> elements
@@ -63,6 +64,8 @@ var preexecute = function(data, callback) {
 		//todo: building a manifest from tiapp.xml
 		return;
 	}
+	// it will be wrote later
+	manifestsrc = manifest;
 
 	// write the manifest
 	/*
@@ -74,6 +77,7 @@ var preexecute = function(data, callback) {
 	 output.close();
 	 });
 	 */
+	 /*
 	fs.writeFile("./Resources/manifest.webapp", manifest, function(err) {
 		if (err)
 		
@@ -85,10 +89,10 @@ var preexecute = function(data, callback) {
 		//console.log('Hello World > helloworld.txt');
 		logger.info("manifest wrote");
 
-		data.cli.addHook('cli:post-execute', postexecute);
+		//data.cli.addHook('cli:post-execute', postexecute);
 		callback && callback();
-	});
-
+	});*/
+	callback && callback();
 };
 
 /******************************************
@@ -115,7 +119,24 @@ firefoxos compliant
  *****************************************/
 var postcompile = function(data, callback) {
 	logger.info("*************************** postcompile");
-	callback && callback();
+
+	var buildDir = data.buildDir;
+	var path = buildDir + "/manifest.webapp";
+
+	fs.writeFile(path, manifestsrc, function(err) {
+		if (err) {
+				logger.info(err);
+				return console.log(err);		
+		}
+		//console.log('Hello World > helloworld.txt');
+		logger.info("manifest wrote");
+
+		//data.cli.addHook('cli:post-execute', postexecute);
+		callback && callback();
+	});
+
+
+	//callback && callback();
 }
 /******************************************
  *
@@ -148,7 +169,7 @@ var finalize = function(data, callback) {
 				return;
 			}
 
-callback && callback();
+			callback && callback();
 
 		});
 		
@@ -198,6 +219,7 @@ callback && callback();
 /******************************************
  *
  *****************************************/
+ /*
 var go = {
 	pre : function(data, callback) {
 
@@ -212,7 +234,7 @@ var go = {
 	},
 	priority : 1000
 }
-
+*/
 /******************************************
  *
  *****************************************/
@@ -228,13 +250,13 @@ exports.init = function(_logger, config, cli, appc) {
 
 		//cli.addHook('build.pre.construct',preconstruct);
 
-		cli.addHook('build.mobileweb.config', mobileweb);
+		//cli.addHook('build.mobileweb.config', mobileweb);
 
-		cli.addHook('build.pre.compile', precompile);
+		//cli.addHook('build.pre.compile', precompile);
 		cli.addHook('build.post.compile', postcompile);
-		cli.addHook('build.finalize', finalize);
-		cli.addHook('cli:pre-execute', preexecute);
-		cli.addHook('cli:post-execute', postexecute);
+		cli.on('build.finalize', finalize);
+		cli.on('cli:pre-execute', preexecute);
+		//cli.addHook('cli:post-execute', postexecute);
 		//cli.addHook('cli:command-loaded', commandloaded);
 		//cli.addHook('cli:go', go);
 	}
